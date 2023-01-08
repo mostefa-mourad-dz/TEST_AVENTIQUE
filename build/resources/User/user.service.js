@@ -130,6 +130,52 @@ var UserService = /** @class */ (function () {
             });
         });
     };
+    // update user
+    UserService.prototype.update = function (id, email, password, first_name, last_name, age) {
+        return __awaiter(this, void 0, void 0, function () {
+            var data, users, user, email_check, hash, index, converted, result, error_4;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 8, , 9]);
+                        return [4 /*yield*/, promises_1.default.readFile(this.link, 'utf-8')];
+                    case 1:
+                        data = _a.sent();
+                        users = JSON.parse(data).users;
+                        user = users.find(function (user) { return user.id === id; });
+                        email_check = users.find(function (user) { return user.email === email; });
+                        return [4 /*yield*/, bcrypt_1.default.hash(password, 10)];
+                    case 2:
+                        hash = _a.sent();
+                        if (!user) return [3 /*break*/, 6];
+                        if (!(user.email === email || !email_check)) return [3 /*break*/, 4];
+                        index = users.findIndex(function (user) { return user.id === id; });
+                        users[index] = {
+                            id: id,
+                            email: email,
+                            password: hash,
+                            first_name: first_name,
+                            last_name: last_name,
+                            birthday: (0, age_helper_1.birthDayCalculator)(age),
+                        };
+                        converted = JSON.stringify({ users: users });
+                        return [4 /*yield*/, promises_1.default.writeFile(this.link, converted)];
+                    case 3:
+                        result = _a.sent();
+                        console.log(result);
+                        return [2 /*return*/, 'User updated successfuly'];
+                    case 4: throw new Error('Email must be unique');
+                    case 5: return [3 /*break*/, 7];
+                    case 6: throw new Error('User not found');
+                    case 7: return [3 /*break*/, 9];
+                    case 8:
+                        error_4 = _a.sent();
+                        throw new Error(error_4.message);
+                    case 9: return [2 /*return*/];
+                }
+            });
+        });
+    };
     return UserService;
 }());
 exports.default = UserService;

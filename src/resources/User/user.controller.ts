@@ -22,6 +22,11 @@ class UserController implements Controller {
       validationMiddleware(validate.createUser),
       this.store,
     );
+    this.router.put(
+      `${this.path}/:Id`,
+      validationMiddleware(validate.createUser),
+      this.update,
+    );
   }
 
   private getAll = async (
@@ -75,6 +80,33 @@ class UserController implements Controller {
       res.status(201).json({ response });
     } catch (error: any) {
       next(new HttpException(400, error.message));
+    }
+  };
+
+  private update = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Response | void> => {
+    try {
+      const { email, password, first_name, last_name, age } = req.body;
+      const response = await this.UserService.update(
+        parseInt(req.params.Id),
+        email,
+        password,
+        first_name,
+        last_name,
+        age,
+      );
+      res.status(200).json({ response });
+    } catch (error: any) {
+      console.log(error);
+      next(
+        new HttpException(
+          error.message === 'User not found' ? 404 : 400,
+          error.message,
+        ),
+      );
     }
   };
 }

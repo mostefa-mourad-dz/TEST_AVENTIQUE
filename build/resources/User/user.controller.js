@@ -118,12 +118,34 @@ var UserController = /** @class */ (function () {
                 }
             });
         }); };
+        this.update = function (req, res, next) { return __awaiter(_this, void 0, void 0, function () {
+            var _a, email, password, first_name, last_name, age, response, error_4;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        _b.trys.push([0, 2, , 3]);
+                        _a = req.body, email = _a.email, password = _a.password, first_name = _a.first_name, last_name = _a.last_name, age = _a.age;
+                        return [4 /*yield*/, this.UserService.update(parseInt(req.params.Id), email, password, first_name, last_name, age)];
+                    case 1:
+                        response = _b.sent();
+                        res.status(200).json({ response: response });
+                        return [3 /*break*/, 3];
+                    case 2:
+                        error_4 = _b.sent();
+                        console.log(error_4);
+                        next(new http_exception_1.default(error_4.message === 'User not found' ? 404 : 400, error_4.message));
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        }); };
         this.initialiseRoutes();
     }
     UserController.prototype.initialiseRoutes = function () {
         this.router.get("".concat(this.path), this.getAll);
         this.router.get("".concat(this.path, "/:Id"), this.getUserById);
         this.router.post("".concat(this.path), (0, validation_middleware_1.default)(user_validation_1.default.createUser), this.store);
+        this.router.put("".concat(this.path, "/:Id"), (0, validation_middleware_1.default)(user_validation_1.default.createUser), this.update);
     };
     return UserController;
 }());
