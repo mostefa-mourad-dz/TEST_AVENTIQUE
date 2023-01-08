@@ -42,27 +42,47 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var promises_1 = __importDefault(require("fs/promises"));
 var UserService = /** @class */ (function () {
     function UserService() {
+        this.link = './src/db/db.json';
     }
-    // get all courses
+    // get all users
     UserService.prototype.index = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var link, data, users, error_1;
+            var data, users, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        link = './src/db/db.json';
-                        _a.label = 1;
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, promises_1.default.readFile(this.link, 'utf-8')];
                     case 1:
-                        _a.trys.push([1, 3, , 4]);
-                        return [4 /*yield*/, promises_1.default.readFile(link, 'utf-8')];
-                    case 2:
                         data = _a.sent();
                         users = JSON.parse(data).users;
                         return [2 /*return*/, users];
-                    case 3:
+                    case 2:
                         error_1 = _a.sent();
                         throw new Error(error_1.message);
-                    case 4: return [2 /*return*/];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    // get user by id
+    UserService.prototype.getUserById = function (Id) {
+        return __awaiter(this, void 0, void 0, function () {
+            var data, users, user, error_2;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, promises_1.default.readFile(this.link, 'utf-8')];
+                    case 1:
+                        data = _a.sent();
+                        users = JSON.parse(data).users;
+                        user = users.find(function (user) { return user.id === Id; });
+                        return [2 /*return*/, user ? user : null];
+                    case 2:
+                        error_2 = _a.sent();
+                        throw new Error(error_2.message);
+                    case 3: return [2 /*return*/];
                 }
             });
         });

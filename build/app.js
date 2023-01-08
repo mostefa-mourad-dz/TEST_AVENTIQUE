@@ -30,7 +30,7 @@ var App = /** @class */ (function () {
     App.prototype.initialiseControllers = function (controllers) {
         var _this = this;
         controllers.forEach(function (controller) {
-            _this.express.use('/api', controller.router);
+            _this.express.use('/api/v1', controller.router);
         });
     };
     App.prototype.initialiseErrorHandling = function () {

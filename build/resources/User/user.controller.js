@@ -70,10 +70,37 @@ var UserController = /** @class */ (function () {
                 }
             });
         }); };
+        this.getUserById = function (req, res, next) { return __awaiter(_this, void 0, void 0, function () {
+            var user, error_2;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.UserService.getUserById(parseInt(req.params.Id))];
+                    case 1:
+                        user = _a.sent();
+                        if (user) {
+                            res.status(200).send({
+                                user: (0, user_helper_1.formatSingleUser)(user),
+                            });
+                        }
+                        else {
+                            next(new http_exception_1.default(404, 'User not found'));
+                        }
+                        return [3 /*break*/, 3];
+                    case 2:
+                        error_2 = _a.sent();
+                        next(new http_exception_1.default(400, error_2.message));
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        }); };
         this.initialiseRoutes();
     }
     UserController.prototype.initialiseRoutes = function () {
         this.router.get("".concat(this.path), this.getAll);
+        this.router.get("".concat(this.path, "/:Id"), this.getUserById);
     };
     return UserController;
 }());
