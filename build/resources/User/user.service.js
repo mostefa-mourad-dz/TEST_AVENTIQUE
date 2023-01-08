@@ -40,6 +40,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var promises_1 = __importDefault(require("fs/promises"));
+var bcrypt_1 = __importDefault(require("bcrypt"));
+var age_helper_1 = require("../../utils/helpers/age.helper");
 var UserService = /** @class */ (function () {
     function UserService() {
         this.link = './src/db/db.json';
@@ -83,6 +85,47 @@ var UserService = /** @class */ (function () {
                         error_2 = _a.sent();
                         throw new Error(error_2.message);
                     case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    // store user
+    UserService.prototype.store = function (email, password, first_name, last_name, age) {
+        return __awaiter(this, void 0, void 0, function () {
+            var data, users, user, hash, converted, result, error_3;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 6, , 7]);
+                        return [4 /*yield*/, promises_1.default.readFile(this.link, 'utf-8')];
+                    case 1:
+                        data = _a.sent();
+                        users = JSON.parse(data).users;
+                        user = users.find(function (user) { return user.email === email; });
+                        if (!user) return [3 /*break*/, 2];
+                        throw new Error('User already exists');
+                    case 2: return [4 /*yield*/, bcrypt_1.default.hash(password, 10)];
+                    case 3:
+                        hash = _a.sent();
+                        users.push({
+                            id: users.length + 1,
+                            email: email,
+                            first_name: first_name,
+                            last_name: last_name,
+                            birthday: (0, age_helper_1.birthDayCalculator)(age),
+                            password: hash,
+                        });
+                        converted = JSON.stringify({ users: users });
+                        return [4 /*yield*/, promises_1.default.writeFile(this.link, converted)];
+                    case 4:
+                        result = _a.sent();
+                        console.log(result);
+                        return [2 /*return*/, 'User created successfuly'];
+                    case 5: return [3 /*break*/, 7];
+                    case 6:
+                        error_3 = _a.sent();
+                        throw new Error(error_3.message);
+                    case 7: return [2 /*return*/];
                 }
             });
         });

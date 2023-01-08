@@ -3,6 +3,8 @@ import Controller from '../../utils/interfaces/controller.interface';
 import HttpException from '../../utils/exceptions/http.exception';
 import UserService from './user.service';
 import { formatSingleUser, formatUsers } from '../../utils/helpers/user.helper';
+import validationMiddleware from '../../middleware/validation.middleware';
+import validate from './user.validation';
 
 class UserController implements Controller {
   public path = '/users';
@@ -15,6 +17,11 @@ class UserController implements Controller {
   private initialiseRoutes(): void {
     this.router.get(`${this.path}`, this.getAll);
     this.router.get(`${this.path}/:Id`, this.getUserById);
+    this.router.post(
+      `${this.path}`,
+      validationMiddleware(validate.createUser),
+      this.store,
+    );
   }
 
   private getAll = async (
@@ -46,6 +53,26 @@ class UserController implements Controller {
       } else {
         next(new HttpException(404, 'User not found'));
       }
+    } catch (error: any) {
+      next(new HttpException(400, error.message));
+    }
+  };
+
+  private store = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Response | void> => {
+    try {
+      const { email, password, first_name, last_name, age } = req.body;
+      const response = await this.UserService.store(
+        email,
+        password,
+        first_name,
+        last_name,
+        age,
+      );
+      res.status(201).json({ response });
     } catch (error: any) {
       next(new HttpException(400, error.message));
     }

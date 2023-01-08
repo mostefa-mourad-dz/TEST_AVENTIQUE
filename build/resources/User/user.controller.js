@@ -43,6 +43,8 @@ var express_1 = require("express");
 var http_exception_1 = __importDefault(require("../../utils/exceptions/http.exception"));
 var user_service_1 = __importDefault(require("./user.service"));
 var user_helper_1 = require("../../utils/helpers/user.helper");
+var validation_middleware_1 = __importDefault(require("../../middleware/validation.middleware"));
+var user_validation_1 = __importDefault(require("./user.validation"));
 var UserController = /** @class */ (function () {
     function UserController() {
         var _this = this;
@@ -96,11 +98,32 @@ var UserController = /** @class */ (function () {
                 }
             });
         }); };
+        this.store = function (req, res, next) { return __awaiter(_this, void 0, void 0, function () {
+            var _a, email, password, first_name, last_name, age, response, error_3;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        _b.trys.push([0, 2, , 3]);
+                        _a = req.body, email = _a.email, password = _a.password, first_name = _a.first_name, last_name = _a.last_name, age = _a.age;
+                        return [4 /*yield*/, this.UserService.store(email, password, first_name, last_name, age)];
+                    case 1:
+                        response = _b.sent();
+                        res.status(201).json({ response: response });
+                        return [3 /*break*/, 3];
+                    case 2:
+                        error_3 = _b.sent();
+                        next(new http_exception_1.default(400, error_3.message));
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        }); };
         this.initialiseRoutes();
     }
     UserController.prototype.initialiseRoutes = function () {
         this.router.get("".concat(this.path), this.getAll);
         this.router.get("".concat(this.path, "/:Id"), this.getUserById);
+        this.router.post("".concat(this.path), (0, validation_middleware_1.default)(user_validation_1.default.createUser), this.store);
     };
     return UserController;
 }());

@@ -8,3 +8,7 @@ export const ageCalculator = (bday: string): number => {
   }
   return age;
 };
+
+export const birthDayCalculator = (age: number): string => {
+  return '1999-07-13';
+};

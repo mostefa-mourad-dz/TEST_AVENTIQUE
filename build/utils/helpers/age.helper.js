@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ageCalculator = void 0;
+exports.birthDayCalculator = exports.ageCalculator = void 0;
 var ageCalculator = function (bday) {
     var today = new Date();
     var birthDate = new Date(bday);
@@ -12,3 +12,7 @@ var ageCalculator = function (bday) {
     return age;
 };
 exports.ageCalculator = ageCalculator;
+var birthDayCalculator = function (age) {
+    return '1999-07-13';
+};
+exports.birthDayCalculator = birthDayCalculator;

@@ -1,14 +1,11 @@
 import Joi from 'joi';
 
-const register = Joi.object({
-  username: Joi.string().max(30).required(),
+const createUser = Joi.object({
   email: Joi.string().email().required(),
   password: Joi.string().min(6).required(),
+  first_name: Joi.string().required(),
+  last_name: Joi.string().required(),
+  age: Joi.number().required(),
 });
 
-const login = Joi.object({
-  email: Joi.string().email().required(),
-  password: Joi.string().required(),
-});
-
-export default { register, login };
+export default { createUser };
