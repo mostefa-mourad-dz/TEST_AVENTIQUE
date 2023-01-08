@@ -55,11 +55,14 @@ class UserController implements Controller {
         res.status(200).send({
           user: formatSingleUser(user),
         });
-      } else {
-        next(new HttpException(404, 'User not found'));
       }
     } catch (error: any) {
-      next(new HttpException(400, error.message));
+      next(
+        new HttpException(
+          error.message === 'User not found' ? 404 : 400,
+          error.message,
+        ),
+      );
     }
   };
 

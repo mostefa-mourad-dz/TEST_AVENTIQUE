@@ -23,7 +23,10 @@ class UserService {
       const data = await fs.readFile(this.link, 'utf-8');
       const { users }: { users: User[] } = JSON.parse(data);
       const user = users.find((user: User) => user.id === Id);
-      return user ? user : null;
+      if (!user) {
+        throw new Error('User not found');
+      }
+      return user;
     } catch (error: any) {
       throw new Error(error.message);
     }
