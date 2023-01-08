@@ -1,9 +1,8 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import Controller from '../../utils/interfaces/controller.interface';
 import HttpException from '../../utils/exceptions/http.exception';
-import validationMiddleware from '../../middleware/validation.middleware';
-import validate from './user.validation';
 import UserService from './user.service';
+import { formatUsers } from '../../utils/helpers/user.helper';
 
 class UserController implements Controller {
   public path = '/users';
@@ -24,7 +23,9 @@ class UserController implements Controller {
   ): Promise<Response | void> => {
     try {
       const users = await this.UserService.index();
-      res.status(200).send({ users });
+      res.status(200).send({
+        users: formatUsers(users),
+      });
     } catch (error: any) {
       next(new HttpException(400, error.message));
     }

@@ -42,6 +42,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = require("express");
 var http_exception_1 = __importDefault(require("../../utils/exceptions/http.exception"));
 var user_service_1 = __importDefault(require("./user.service"));
+var user_helper_1 = require("../../utils/helpers/user.helper");
 var UserController = /** @class */ (function () {
     function UserController() {
         var _this = this;
@@ -57,7 +58,9 @@ var UserController = /** @class */ (function () {
                         return [4 /*yield*/, this.UserService.index()];
                     case 1:
                         users = _a.sent();
-                        res.status(200).send({ users: users });
+                        res.status(200).send({
+                            users: (0, user_helper_1.formatUsers)(users),
+                        });
                         return [3 /*break*/, 3];
                     case 2:
                         error_1 = _a.sent();

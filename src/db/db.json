@@ -4,19 +4,22 @@
         "id": 1,
         "first_name": "Sebastian",
         "last_name": "Eschweiler",
-        "email": "sebastian@aventique.com"
+        "email": "sebastian@aventique.com",
+        "birthday" : "1999-07-13"
       },
       {
         "id": 2,
         "first_name": "Steve",
         "last_name": "Palmer",
-        "email": "steve@aventique.com"
+        "email": "steve@aventique.com",
+        "birthday" : "1998-07-13"
       },
       {
         "id": 3,
         "first_name": "Ann",
         "last_name": "Smith",
-        "email": "ann@aventique.com"
+        "email": "ann@aventique.com",
+        "birthday" : "1997-07-13"
       }
     ]
   }
