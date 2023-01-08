@@ -66,7 +66,7 @@ class UserService {
     }
   }
 
-  // update user
+  // update user by Id
   public async update(
     id: number,
     email: string,
@@ -102,6 +102,26 @@ class UserService {
       } else {
         throw new Error('User not found');
       }
+    } catch (error: any) {
+      throw new Error(error.message);
+    }
+  }
+
+  // delete user by id
+  public async deleteUserById(Id: number): Promise<string | Error> {
+    try {
+      const data = await fs.readFile(this.link, 'utf-8');
+      const { users }: { users: User[] } = JSON.parse(data);
+      const user = users.find((user: User) => user.id === Id);
+      if (!user) {
+        throw new Error('User not found');
+      }
+      const index = users.findIndex((user: User) => user.id === Id);
+      delete users[index];
+      const converted = JSON.stringify({ users: users });
+      const result = await fs.writeFile(this.link, converted);
+      console.log(result);
+      return 'User deleted successfuly';
     } catch (error: any) {
       throw new Error(error.message);
     }

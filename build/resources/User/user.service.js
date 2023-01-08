@@ -80,7 +80,10 @@ var UserService = /** @class */ (function () {
                         data = _a.sent();
                         users = JSON.parse(data).users;
                         user = users.find(function (user) { return user.id === Id; });
-                        return [2 /*return*/, user ? user : null];
+                        if (!user) {
+                            throw new Error('User not found');
+                        }
+                        return [2 /*return*/, user];
                     case 2:
                         error_2 = _a.sent();
                         throw new Error(error_2.message);
@@ -130,7 +133,7 @@ var UserService = /** @class */ (function () {
             });
         });
     };
-    // update user
+    // update user by Id
     UserService.prototype.update = function (id, email, password, first_name, last_name, age) {
         return __awaiter(this, void 0, void 0, function () {
             var data, users, user, email_check, hash, index, converted, result, error_4;
@@ -172,6 +175,38 @@ var UserService = /** @class */ (function () {
                         error_4 = _a.sent();
                         throw new Error(error_4.message);
                     case 9: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    // delete user by id
+    UserService.prototype.deleteUserById = function (Id) {
+        return __awaiter(this, void 0, void 0, function () {
+            var data, users, user, index, converted, result, error_5;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 3, , 4]);
+                        return [4 /*yield*/, promises_1.default.readFile(this.link, 'utf-8')];
+                    case 1:
+                        data = _a.sent();
+                        users = JSON.parse(data).users;
+                        user = users.find(function (user) { return user.id === Id; });
+                        if (!user) {
+                            throw new Error('User not found');
+                        }
+                        index = users.findIndex(function (user) { return user.id === Id; });
+                        delete users[index];
+                        converted = JSON.stringify({ users: users });
+                        return [4 /*yield*/, promises_1.default.writeFile(this.link, converted)];
+                    case 2:
+                        result = _a.sent();
+                        console.log(result);
+                        return [2 /*return*/, 'User deleted successfuly'];
+                    case 3:
+                        error_5 = _a.sent();
+                        throw new Error(error_5.message);
+                    case 4: return [2 /*return*/];
                 }
             });
         });

@@ -27,6 +27,7 @@ class UserController implements Controller {
       validationMiddleware(validate.createUser),
       this.update,
     );
+    this.router.delete(`${this.path}/:Id`, this.deleteUserById);
   }
 
   private getAll = async (
@@ -104,6 +105,28 @@ class UserController implements Controller {
       res.status(200).json({ response });
     } catch (error: any) {
       console.log(error);
+      next(
+        new HttpException(
+          error.message === 'User not found' ? 404 : 400,
+          error.message,
+        ),
+      );
+    }
+  };
+
+  private deleteUserById = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Response | void> => {
+    try {
+      const response = await this.UserService.deleteUserById(
+        parseInt(req.params.Id),
+      );
+      res.status(200).send({
+        response,
+      });
+    } catch (error: any) {
       next(
         new HttpException(
           error.message === 'User not found' ? 404 : 400,

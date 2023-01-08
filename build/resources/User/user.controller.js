@@ -86,13 +86,10 @@ var UserController = /** @class */ (function () {
                                 user: (0, user_helper_1.formatSingleUser)(user),
                             });
                         }
-                        else {
-                            next(new http_exception_1.default(404, 'User not found'));
-                        }
                         return [3 /*break*/, 3];
                     case 2:
                         error_2 = _a.sent();
-                        next(new http_exception_1.default(400, error_2.message));
+                        next(new http_exception_1.default(error_2.message === 'User not found' ? 404 : 400, error_2.message));
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
                 }
@@ -139,6 +136,27 @@ var UserController = /** @class */ (function () {
                 }
             });
         }); };
+        this.deleteUserById = function (req, res, next) { return __awaiter(_this, void 0, void 0, function () {
+            var response, error_5;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.UserService.deleteUserById(parseInt(req.params.Id))];
+                    case 1:
+                        response = _a.sent();
+                        res.status(200).send({
+                            response: response,
+                        });
+                        return [3 /*break*/, 3];
+                    case 2:
+                        error_5 = _a.sent();
+                        next(new http_exception_1.default(error_5.message === 'User not found' ? 404 : 400, error_5.message));
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        }); };
         this.initialiseRoutes();
     }
     UserController.prototype.initialiseRoutes = function () {
@@ -146,6 +164,7 @@ var UserController = /** @class */ (function () {
         this.router.get("".concat(this.path, "/:Id"), this.getUserById);
         this.router.post("".concat(this.path), (0, validation_middleware_1.default)(user_validation_1.default.createUser), this.store);
         this.router.put("".concat(this.path, "/:Id"), (0, validation_middleware_1.default)(user_validation_1.default.createUser), this.update);
+        this.router.delete("".concat(this.path, "/:Id"), this.deleteUserById);
     };
     return UserController;
 }());
