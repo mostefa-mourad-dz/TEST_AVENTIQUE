@@ -8,7 +8,7 @@ export const formatUsers = (users: User[]) => {
 export const formatSingleUser = (user: User) => {
   return {
     id: user.id,
-    fullName: user.first_name + ' ' + user.last_name,
+    full_name: user.first_name + ' ' + user.last_name,
     email: user.email,
     age: ageCalculator(user.birthday),
   };
