@@ -1,5 +1,4 @@
 import User from './user.interface';
-import fs from 'fs/promises';
 import brcypt from 'bcrypt';
 import { birthDayCalculator } from '../../utils/helpers/age.helper';
 import {
@@ -130,17 +129,25 @@ class UserService {
   // delete user by id
   public async deleteUserById(Id: number): Promise<string | Error> {
     try {
-      const data = await fs.readFile(this.link, 'utf-8');
-      const { users }: { users: User[] } = JSON.parse(data);
+      // Read all users using the files utility and than convert them
+      const users: User[] = await readAllObjects(this.db_name);
+      // Find User By Id
       const user = users.find((user: User) => user.id === Id);
       if (!user) {
+        // If User does not exist
         throw new Error('User not found');
       }
+      // Find The Index of the user object
       const index = users.findIndex((user: User) => user.id === Id);
-      delete users[index];
-      const converted = JSON.stringify({ users: users });
-      const result = await fs.writeFile(this.link, converted);
-      return 'User deleted successfuly';
+      // remove the user from the array
+      const new_users = users.splice(index, 1);
+      // Write data using the file utility
+      const result = await writeAllObjects(this.db_name, new_users);
+      if (result) {
+        return 'User deleted successfully';
+      }
+      // In case something went wrong during the writing process
+      throw new Error('Something went wrong');
     } catch (error: any) {
       throw new Error(error.message);
     }

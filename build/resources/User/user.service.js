@@ -39,7 +39,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var promises_1 = __importDefault(require("fs/promises"));
 var bcrypt_1 = __importDefault(require("bcrypt"));
 var age_helper_1 = require("../../utils/helpers/age.helper");
 var files_helper_1 = require("../../utils/helpers/files.helper");
@@ -189,26 +188,29 @@ var UserService = /** @class */ (function () {
     // delete user by id
     UserService.prototype.deleteUserById = function (Id) {
         return __awaiter(this, void 0, void 0, function () {
-            var data, users, user, index, converted, result, error_5;
+            var users, user, index, new_users, result, error_5;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 3, , 4]);
-                        return [4 /*yield*/, promises_1.default.readFile(this.link, 'utf-8')];
+                        return [4 /*yield*/, (0, files_helper_1.readAllObjects)(this.db_name)];
                     case 1:
-                        data = _a.sent();
-                        users = JSON.parse(data).users;
+                        users = _a.sent();
                         user = users.find(function (user) { return user.id === Id; });
                         if (!user) {
+                            // If User does not exist
                             throw new Error('User not found');
                         }
                         index = users.findIndex(function (user) { return user.id === Id; });
-                        delete users[index];
-                        converted = JSON.stringify({ users: users });
-                        return [4 /*yield*/, promises_1.default.writeFile(this.link, converted)];
+                        new_users = users.splice(index, 1);
+                        return [4 /*yield*/, (0, files_helper_1.writeAllObjects)(this.db_name, new_users)];
                     case 2:
                         result = _a.sent();
-                        return [2 /*return*/, 'User deleted successfuly'];
+                        if (result) {
+                            return [2 /*return*/, 'User deleted successfully'];
+                        }
+                        // In case something went wrong during the writing process
+                        throw new Error('Something went wrong');
                     case 3:
                         error_5 = _a.sent();
                         throw new Error(error_5.message);
