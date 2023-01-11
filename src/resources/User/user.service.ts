@@ -8,7 +8,6 @@ import {
 
 class UserService {
   private db_name = 'users';
-  private link = '';
   // get all users
   public async index(): Promise<User[]> {
     try {
@@ -28,7 +27,7 @@ class UserService {
       const user = users.find((user: User) => user.id === Id);
       // If user does not exist
       if (!user) {
-        throw new Error('User not found');
+        throw new Error();
       }
       // else if user exists
       return user;
