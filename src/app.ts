@@ -1,10 +1,7 @@
-import express, { Application } from 'express';
-import compression from 'compression';
-import cors from 'cors';
-import morgan from 'morgan';
+import express, { Application, json, urlencoded } from 'express';
 import Controller from './utils/interfaces/controller.interface';
 import ErrorMiddleware from './middleware/error.middleware';
-import helmet from 'helmet'; // help prevent cummon attacks
+import { VERSION } from './utils/constants';
 
 class App {
   public express: Application;
@@ -16,22 +13,20 @@ class App {
     this.initialiseControllers(controllers);
     this.initialiseErrorHandling();
   }
+
+  private initialiseControllers(controllers: Controller[]): void {
+    controllers.forEach((controller: Controller) => {
+      this.express.use(`/api/${VERSION}`, controller.router);
+    });
+  }
+
   private initialiseMiddleware(): void {
-    this.express.use(helmet());
-    this.express.use(cors());
-    this.express.use(morgan('dev'));
-    this.express.use(express.json());
+    this.express.use(json());
     this.express.use(
-      express.urlencoded({
+      urlencoded({
         extended: false,
       }),
     );
-    this.express.use(compression());
-  }
-  private initialiseControllers(controllers: Controller[]): void {
-    controllers.forEach((controller: Controller) => {
-      this.express.use('/api/v1', controller.router);
-    });
   }
 
   private initialiseErrorHandling(): void {

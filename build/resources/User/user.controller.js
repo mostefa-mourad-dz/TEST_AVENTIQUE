@@ -129,7 +129,6 @@ var UserController = /** @class */ (function () {
                         return [3 /*break*/, 3];
                     case 2:
                         error_4 = _b.sent();
-                        console.log(error_4);
                         next(new http_exception_1.default(error_4.message === 'User not found' ? 404 : 400, error_4.message));
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];

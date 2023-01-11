@@ -42,22 +42,23 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var promises_1 = __importDefault(require("fs/promises"));
 var bcrypt_1 = __importDefault(require("bcrypt"));
 var age_helper_1 = require("../../utils/helpers/age.helper");
+var files_helper_1 = require("../../utils/helpers/files.helper");
 var UserService = /** @class */ (function () {
     function UserService() {
-        this.link = './src/db/db.json';
+        this.db_name = 'users';
+        this.link = '';
     }
     // get all users
     UserService.prototype.index = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var data, users, error_1;
+            var users, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, promises_1.default.readFile(this.link, 'utf-8')];
+                        return [4 /*yield*/, (0, files_helper_1.readAllObjects)(this.db_name)];
                     case 1:
-                        data = _a.sent();
-                        users = JSON.parse(data).users;
+                        users = _a.sent();
                         return [2 /*return*/, users];
                     case 2:
                         error_1 = _a.sent();
@@ -70,19 +71,20 @@ var UserService = /** @class */ (function () {
     // get user by id
     UserService.prototype.getUserById = function (Id) {
         return __awaiter(this, void 0, void 0, function () {
-            var data, users, user, error_2;
+            var users, user, error_2;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, promises_1.default.readFile(this.link, 'utf-8')];
+                        return [4 /*yield*/, (0, files_helper_1.readAllObjects)(this.db_name)];
                     case 1:
-                        data = _a.sent();
-                        users = JSON.parse(data).users;
+                        users = _a.sent();
                         user = users.find(function (user) { return user.id === Id; });
+                        // If user does not exist
                         if (!user) {
                             throw new Error('User not found');
                         }
+                        // else if user exists
                         return [2 /*return*/, user];
                     case 2:
                         error_2 = _a.sent();
@@ -95,17 +97,17 @@ var UserService = /** @class */ (function () {
     // store user
     UserService.prototype.store = function (email, password, first_name, last_name, age) {
         return __awaiter(this, void 0, void 0, function () {
-            var data, users, user, hash, converted, result, error_3;
+            var users, user, hash, result, error_3;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 6, , 7]);
-                        return [4 /*yield*/, promises_1.default.readFile(this.link, 'utf-8')];
+                        return [4 /*yield*/, (0, files_helper_1.readAllObjects)(this.db_name)];
                     case 1:
-                        data = _a.sent();
-                        users = JSON.parse(data).users;
+                        users = _a.sent();
                         user = users.find(function (user) { return user.email === email; });
                         if (!user) return [3 /*break*/, 2];
+                        // If email address aleady taken
                         throw new Error('User already exists');
                     case 2: return [4 /*yield*/, bcrypt_1.default.hash(password, 10)];
                     case 3:
@@ -118,12 +120,14 @@ var UserService = /** @class */ (function () {
                             birthday: (0, age_helper_1.birthDayCalculator)(age),
                             password: hash,
                         });
-                        converted = JSON.stringify({ users: users });
-                        return [4 /*yield*/, promises_1.default.writeFile(this.link, converted)];
+                        return [4 /*yield*/, (0, files_helper_1.writeAllObjects)(this.db_name, users)];
                     case 4:
                         result = _a.sent();
-                        console.log(result);
-                        return [2 /*return*/, 'User created successfuly'];
+                        if (result) {
+                            return [2 /*return*/, 'User created successfuly'];
+                        }
+                        // In case something went wrong during the writing process
+                        throw new Error('Something went wrong');
                     case 5: return [3 /*break*/, 7];
                     case 6:
                         error_3 = _a.sent();
@@ -136,15 +140,14 @@ var UserService = /** @class */ (function () {
     // update user by Id
     UserService.prototype.update = function (id, email, password, first_name, last_name, age) {
         return __awaiter(this, void 0, void 0, function () {
-            var data, users, user, email_check, hash, index, converted, result, error_4;
+            var users, user, email_check, hash, index, result, error_4;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 8, , 9]);
-                        return [4 /*yield*/, promises_1.default.readFile(this.link, 'utf-8')];
+                        return [4 /*yield*/, (0, files_helper_1.readAllObjects)(this.db_name)];
                     case 1:
-                        data = _a.sent();
-                        users = JSON.parse(data).users;
+                        users = _a.sent();
                         user = users.find(function (user) { return user.id === id; });
                         email_check = users.find(function (user) { return user.email === email; });
                         return [4 /*yield*/, bcrypt_1.default.hash(password, 10)];
@@ -161,13 +164,17 @@ var UserService = /** @class */ (function () {
                             last_name: last_name,
                             birthday: (0, age_helper_1.birthDayCalculator)(age),
                         };
-                        converted = JSON.stringify({ users: users });
-                        return [4 /*yield*/, promises_1.default.writeFile(this.link, converted)];
+                        return [4 /*yield*/, (0, files_helper_1.writeAllObjects)(this.db_name, users)];
                     case 3:
                         result = _a.sent();
-                        console.log(result);
-                        return [2 /*return*/, 'User updated successfuly'];
-                    case 4: throw new Error('Email must be unique');
+                        if (result) {
+                            return [2 /*return*/, 'User created successfuly'];
+                        }
+                        // In case something went wrong during the writing process
+                        throw new Error('Something went wrong');
+                    case 4: 
+                    // if new email address taken by another user
+                    throw new Error('Email must be unique');
                     case 5: return [3 /*break*/, 7];
                     case 6: throw new Error('User not found');
                     case 7: return [3 /*break*/, 9];
@@ -201,7 +208,6 @@ var UserService = /** @class */ (function () {
                         return [4 /*yield*/, promises_1.default.writeFile(this.link, converted)];
                     case 2:
                         result = _a.sent();
-                        console.log(result);
                         return [2 /*return*/, 'User deleted successfuly'];
                     case 3:
                         error_5 = _a.sent();

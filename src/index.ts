@@ -1,10 +1,8 @@
 import 'dotenv/config';
 import 'module-alias/register';
-import validateEnv from './utils/validateEnv';
 import App from './app';
 import UserController from './resources/User/user.controller';
-validateEnv();
 
-const app = new App([new UserController()], Number(process.env.PORT));
+const app = new App([new UserController()], Number(3000));
 
 app.listen();

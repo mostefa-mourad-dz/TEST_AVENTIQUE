@@ -104,7 +104,6 @@ class UserController implements Controller {
       );
       res.status(200).json({ response });
     } catch (error: any) {
-      console.log(error);
       next(
         new HttpException(
           error.message === 'User not found' ? 404 : 400,

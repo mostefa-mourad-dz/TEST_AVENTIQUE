@@ -35,28 +35,65 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.verifyToken = exports.createToken = void 0;
-var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-var createToken = function (user) {
-    return jsonwebtoken_1.default.sign({ id: user.id }, process.env.JWT_SECRET, {
-        expiresIn: '1d',
-    });
-};
-exports.createToken = createToken;
-var verifyToken = function (token) { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        return [2 /*return*/, new Promise(function (resolve, reject) {
-                jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET, function (err, payload) {
-                    if (err)
-                        return reject(err);
-                    resolve(payload);
-                });
-            })];
-    });
-}); };
-exports.verifyToken = verifyToken;
-exports.default = { createToken: exports.createToken, verifyToken: exports.verifyToken };
+var user_helper_1 = require("../utils/helpers/user.helper");
+var users = [
+    {
+        id: 1,
+        first_name: 'Sebastian',
+        last_name: 'Eschweiler',
+        email: 'sebastian@aventique.com',
+        birthday: '1999-07-13',
+        password: 'password',
+    },
+    {
+        id: 2,
+        first_name: 'Steve',
+        last_name: 'Palmer',
+        email: 'steve@aventique.com',
+        birthday: '1998-07-13',
+        password: 'password',
+    },
+    {
+        id: 3,
+        first_name: 'Ann',
+        last_name: 'Smith',
+        email: 'ann@aventique.com',
+        birthday: '1997-07-13',
+        password: 'password',
+    },
+];
+var converted_users = [
+    {
+        id: 1,
+        full_name: 'Sebastian Eschweiler',
+        email: 'sebastian@aventique.com',
+        age: 23,
+    },
+    {
+        id: 2,
+        full_name: 'Steve Palmer',
+        email: 'steve@aventique.com',
+        age: 24,
+    },
+    {
+        id: 3,
+        full_name: 'Ann Smith',
+        email: 'ann@aventique.com',
+        age: 25,
+    },
+];
+describe('user_helper_test', function () {
+    test('single_user_formatter', function () { return __awaiter(void 0, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            expect((0, user_helper_1.formatSingleUser)(users[0])).toEqual(converted_users[0]);
+            return [2 /*return*/];
+        });
+    }); });
+    test('multiple_users_formatter', function () { return __awaiter(void 0, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            expect((0, user_helper_1.formatUsers)(users)).toEqual(converted_users);
+            return [2 /*return*/];
+        });
+    }); });
+});

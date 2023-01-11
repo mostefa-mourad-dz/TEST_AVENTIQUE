@@ -9,7 +9,7 @@ exports.formatUsers = formatUsers;
 var formatSingleUser = function (user) {
     return {
         id: user.id,
-        fullName: user.first_name + ' ' + user.last_name,
+        full_name: user.first_name + ' ' + user.last_name,
         email: user.email,
         age: (0, age_helper_1.ageCalculator)(user.birthday),
     };

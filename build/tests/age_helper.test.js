@@ -36,38 +36,18 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-function validationMiddleware(schema) {
-    var _this = this;
-    return function (req, res, next) { return __awaiter(_this, void 0, void 0, function () {
-        var validationOptions, value, e_1, errors_1;
+var age_helper_1 = require("../utils/helpers/age.helper");
+describe('age_helper_test', function () {
+    test('age_calculator', function () { return __awaiter(void 0, void 0, void 0, function () {
         return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    validationOptions = {
-                        abortEarly: false,
-                        allowUnknown: true,
-                        stripUnknown: true,
-                    };
-                    _a.label = 1;
-                case 1:
-                    _a.trys.push([1, 3, , 4]);
-                    return [4 /*yield*/, schema.validateAsync(req.body, validationOptions)];
-                case 2:
-                    value = _a.sent();
-                    req.body = value;
-                    next();
-                    return [3 /*break*/, 4];
-                case 3:
-                    e_1 = _a.sent();
-                    errors_1 = [];
-                    e_1.details.forEach(function (error) {
-                        errors_1.push(error.message);
-                    });
-                    res.status(422).send({ errors: errors_1 });
-                    return [3 /*break*/, 4];
-                case 4: return [2 /*return*/];
-            }
+            expect((0, age_helper_1.ageCalculator)('1999-07-13')).toEqual(23);
+            return [2 /*return*/];
         });
-    }); };
-}
-exports.default = validationMiddleware;
+    }); });
+    test('birthday_calculator', function () { return __awaiter(void 0, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            expect(new Date((0, age_helper_1.birthDayCalculator)(23)).getFullYear()).toEqual(1999);
+            return [2 /*return*/];
+        });
+    }); });
+});

@@ -35,39 +35,41 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-function validationMiddleware(schema) {
-    var _this = this;
-    return function (req, res, next) { return __awaiter(_this, void 0, void 0, function () {
-        var validationOptions, value, e_1, errors_1;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    validationOptions = {
-                        abortEarly: false,
-                        allowUnknown: true,
-                        stripUnknown: true,
-                    };
-                    _a.label = 1;
-                case 1:
-                    _a.trys.push([1, 3, , 4]);
-                    return [4 /*yield*/, schema.validateAsync(req.body, validationOptions)];
-                case 2:
-                    value = _a.sent();
-                    req.body = value;
-                    next();
-                    return [3 /*break*/, 4];
-                case 3:
-                    e_1 = _a.sent();
-                    errors_1 = [];
-                    e_1.details.forEach(function (error) {
-                        errors_1.push(error.message);
-                    });
-                    res.status(422).send({ errors: errors_1 });
-                    return [3 /*break*/, 4];
-                case 4: return [2 /*return*/];
-            }
-        });
-    }); };
-}
-exports.default = validationMiddleware;
+exports.writeAllObjects = exports.readAllObjects = void 0;
+var promises_1 = __importDefault(require("fs/promises"));
+var readAllObjects = function (model) { return __awaiter(void 0, void 0, void 0, function () {
+    var data, formattedData;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, promises_1.default.readFile("./src/db/".concat(model, ".json"), 'utf-8')];
+            case 1:
+                data = _a.sent();
+                formattedData = JSON.parse(data);
+                return [2 /*return*/, formattedData[model] || []];
+        }
+    });
+}); };
+exports.readAllObjects = readAllObjects;
+var writeAllObjects = function (model, array) { return __awaiter(void 0, void 0, void 0, function () {
+    var converted, result;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                converted = '';
+                switch (model) {
+                    default:
+                        converted = JSON.stringify({ users: array });
+                        break;
+                }
+                return [4 /*yield*/, promises_1.default.writeFile("./src/db/".concat(model, ".json"), converted)];
+            case 1:
+                result = _a.sent();
+                return [2 /*return*/, 'Success'];
+        }
+    });
+}); };
+exports.writeAllObjects = writeAllObjects;
